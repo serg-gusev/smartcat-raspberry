@@ -31,7 +31,7 @@ private:
     Widget w;
     QWebSocket s, c;
     Usb u;
-    // raspicam::RaspiCam camera;
+    raspicam::RaspiCam camera;
 };
 
 #endif // APPLICATION_H

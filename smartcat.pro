@@ -8,7 +8,7 @@ QT       += core gui websockets widgets
 
 TARGET = smartcat
 TEMPLATE = app
-LIBS += -lusb
+LIBS += -L/opt/vc/lib -lusb -lraspicam -lmmal -lmmal_core -lmmal_util
 
 SOURCES += main.cpp \
     widget.cpp \

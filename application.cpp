@@ -1,6 +1,9 @@
 #include "application.h"
 
 #include <QDebug>
+#include <QImage>
+
+#include <unistd.h>
 
 Application::Application() : QObject()
 {
@@ -13,8 +16,10 @@ Application::Application() : QObject()
 
     connect(&w, SIGNAL(switchToggledUser(bool)), SLOT(onSwitchToggled(bool)));
 
-    // camera.open();
-    // sleep(3);
+    camera.open();
+    sleep(3);
+
+    onVideoMessageReceived("frame");
 }
 
 Application::~Application()
@@ -45,7 +50,6 @@ void Application::onVideoMessageReceived(const QString &msg)
         return;
     }
 
-/*
     if (!camera.isOpened()) {
         qDebug() << "camera is not opened";
         return;
@@ -55,9 +59,9 @@ void Application::onVideoMessageReceived(const QString &msg)
     int imageSize = camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_RGB);
     unsigned char *data = new unsigned char[imageSize];
     camera.retrieve(data, raspicam::RASPICAM_FORMAT_RGB);
-    // convert data to JPEG and send
+    
+    qDebug() << QImage(data, camera.getWidth(), camera.getHeight(), QImage::Format_RGB888).save("ololo.jpg");
     delete[] data;
-*/
 }
 
 void Application::onConnected()
