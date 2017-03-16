@@ -2,6 +2,8 @@
 
 #include <QDebug>
 #include <QImage>
+#include <QBuffer>
+#include <QImageWriter>
 
 #include <unistd.h>
 
@@ -18,8 +20,6 @@ Application::Application() : QObject()
 
     camera.open();
     sleep(3);
-
-    onVideoMessageReceived("frame");
 }
 
 Application::~Application()
@@ -60,7 +60,20 @@ void Application::onVideoMessageReceived(const QString &msg)
     unsigned char *data = new unsigned char[imageSize];
     camera.retrieve(data, raspicam::RASPICAM_FORMAT_RGB);
     
-    qDebug() << QImage(data, camera.getWidth(), camera.getHeight(), QImage::Format_RGB888).save("ololo.jpg");
+    QImage frame = QImage(data, camera.getWidth(), camera.getHeight(), QImage::Format_RGB888).scaledToWidth(400);
+
+    QByteArray array;
+    QBuffer buffer(&array);
+
+    // write image to memory buffer
+    QImageWriter writer;
+    writer.setDevice(&buffer);
+    writer.setFormat("JPEG");
+    writer.setCompression(9);
+    writer.write(frame);
+
+    c.sendBinaryMessage(array);
+
     delete[] data;
 }
 
@@ -73,6 +86,7 @@ void Application::onDisconnected()
 {
     w.setDisconnected();
     s.open(QUrl("ws://46.242.98.12:8889/ws"));
+    c.open(QUrl("ws://46.242.98.12:8889/vws"));
 }
 
 void Application::onSwitchToggled(bool toggled)
