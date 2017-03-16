@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>off.png</file>
+        <file>on.png</file>
+        <file>close.png</file>
+        <file>connected.png</file>
+        <file>disconnected.png</file>
+        <file>spinner.gif</file>
+    </qresource>
+</RCC>
